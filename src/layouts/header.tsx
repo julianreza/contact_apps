@@ -64,12 +64,12 @@ const Header = () => {
                                 <hr />
                             </div>
                         </div>
-                        <div className="border-t border-gray-300 px-6 pb-6 pt-5">
-                            <Button
-                                className="h-auto w-full justify-start p-0 font-medium text-gray-700 outline-none focus-within:text-gray-600 hover:text-gray-900 focus-visible:ring-0"
+                        <div className="border-t border-gray-300 px-6 py-6 hover:bg-gray-700 hover:text-white rounded-b-2xl">
+                            <button
+                                className="h-auto w-full justify-start font-medium focus-visible:ring-0"
                             >
                                 Sign Out
-                            </Button>
+                            </button>
                         </div>
                     </Popover.Content>
                 </Popover>

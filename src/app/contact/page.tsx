@@ -8,7 +8,7 @@ import {
     useReactTable,
 } from '@tanstack/react-table'
 import Image from 'next/image'
-import { useEffect, useReducer, useState } from 'react'
+import { useEffect, useState } from 'react'
 
 interface Contact {
     id: string
@@ -29,7 +29,7 @@ const columns = [
     columnHelper.accessor(row => row, {
         id: 'id',
         cell: info => <div className='flex flex-row items-center'>
-            <img src={info.getValue().photo} className='w-16 h-16 object-cover rounded-full border border-gray-200 mr-10'/>
+            <img src={info.getValue().photo} className='w-16 h-16 object-cover rounded-full border border-gray-200 mr-10' />
             <span>{info.getValue().firstName + ' ' + info.getValue().lastName}</span>
         </div>,
         header: () => <span>Contact</span>,
@@ -44,7 +44,7 @@ const columns = [
 
 const Contact = () => {
     const [data, setData] = useState<Contact[]>([]);
-    const rerender = useReducer(() => ({}), {})[1]
+    const [loading, setLoading] = useState<boolean>(false)
 
     const table = useReactTable({
         data,
@@ -54,6 +54,7 @@ const Contact = () => {
 
     useEffect(() => {
         const fetchData = async () => {
+            setLoading(true)
             try {
                 const result = await get<Response>('/contact');
                 if (result) {
@@ -62,13 +63,13 @@ const Contact = () => {
             } catch (error) {
                 console.error(error);
             }
+            setLoading(false)
         };
-
         fetchData();
     }, []);
 
     return (
-        <div className='p-2 transition-all duration-700'>
+        <div className='p-2'>
             <table className='flex flex-col w-full gap-4 table-auto'>
                 <thead>
                     {table.getHeaderGroups().map(headerGroup => (
@@ -86,8 +87,22 @@ const Contact = () => {
                         </tr>
                     ))}
                 </thead>
-                <tbody>
-                    {table.getRowModel().rows.map(row => (
+                {
+
+                    <tbody> {loading ?
+                        <>
+                            <tr className='w-full flex flex-row justify-between h-28 border rounded-xl shadow-md mb-4 animate-pulse bg-gray-400'></tr>
+                            <tr className='w-full flex flex-row justify-between h-28 border rounded-xl shadow-md mb-4 animate-pulse bg-gray-400'></tr>
+                            <tr className='w-full flex flex-row justify-between h-28 border rounded-xl shadow-md mb-4 animate-pulse bg-gray-400'></tr>
+                            <tr className='w-full flex flex-row justify-between h-28 border rounded-xl shadow-md mb-4 animate-pulse bg-gray-400'></tr>
+                            <tr className='w-full flex flex-row justify-between h-28 border rounded-xl shadow-md mb-4 animate-pulse bg-gray-400'></tr>
+                            <tr className='w-full flex flex-row justify-between h-28 border rounded-xl shadow-md mb-4 animate-pulse bg-gray-400'></tr>
+                            <tr className='w-full flex flex-row justify-between h-28 border rounded-xl shadow-md mb-4 animate-pulse bg-gray-400'></tr>
+                            <tr className='w-full flex flex-row justify-between h-28 border rounded-xl shadow-md mb-4 animate-pulse bg-gray-400'></tr>
+                            <tr className='w-full flex flex-row justify-between h-28 border rounded-xl shadow-md mb-4 animate-pulse bg-gray-400'></tr>
+                            <tr className='w-full flex flex-row justify-between h-28 border rounded-xl shadow-md mb-4 animate-pulse bg-gray-400'></tr>
+                        </> :
+                        table.getRowModel().rows.map(row => (
                         <tr key={row.id} className='w-full flex flex-row justify-between px-10 py-6 border rounded-xl shadow-md mb-4'>
                             {row.getVisibleCells().map(cell => (
                                 <td key={cell.id} className='w-64'>
@@ -95,8 +110,9 @@ const Contact = () => {
                                 </td>
                             ))}
                         </tr>
-                    ))}
-                </tbody>
+                        ))}
+                    </tbody>
+                }
             </table>
         </div>
     )
