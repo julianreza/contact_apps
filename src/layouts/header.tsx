@@ -1,6 +1,5 @@
 'use client';
 import Logo from "@/components/atoms/logo";
-import useIsMounted from "@/hooks/use-is-mounted";
 import { useWindowScroll } from "@/hooks/use-window-scroll";
 import cn from "@/utils/class-names";
 import Link from "next/link";
@@ -10,6 +9,7 @@ import { Popover } from "@/components/atoms/popover";
 import { Avatar } from "@/components/atoms/avatar";
 import Button from "@/components/atoms/button";
 import { Text, Title } from "rizzui";
+import { useIsMounted } from "@/hooks/use-is-mounted";
 
 const Header = () => {
     const isMounted = useIsMounted();
