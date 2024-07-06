@@ -22,7 +22,7 @@ const Header = () => {
                 ((isMounted && windowScroll.y) as number) > 2 ? 'card-shadow' : ''
             )}
         >
-            <div className="hidden items-center gap-3 xl:flex flex-row">
+            <div className="hidden items-center gap-3 xl:flex flex-row justify-center">
                 <Link
                     aria-label="Site Logo"
                     href={'/'}
