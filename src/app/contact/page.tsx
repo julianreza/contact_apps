@@ -8,7 +8,7 @@ import {
     useReactTable,
 } from '@tanstack/react-table'
 import Image from 'next/image'
-import { useEffect, useReducer, useState } from 'react'
+import { useEffect, useState } from 'react'
 
 interface Contact {
     id: string
@@ -29,20 +29,22 @@ const columns = [
     columnHelper.accessor(row => row, {
         id: 'id',
         cell: info => <div className='flex flex-row items-center'>
-            <img src={info.getValue().photo} className='w-16 h-16 object-cover rounded-full border border-gray-200 mr-2'/>
+            <img src={info.getValue().photo} className='w-16 h-16 object-cover rounded-full border border-gray-200 mr-10' />
             <span>{info.getValue().firstName + ' ' + info.getValue().lastName}</span>
         </div>,
         header: () => <span>Contact</span>,
     }),
     columnHelper.accessor('age', {
         header: () => 'Age',
-        cell: info => info.renderValue(),
+        cell: info => <div className='flex flex-col justify-center h-full'>
+            <span>{info.getValue()}</span>
+        </div>,
     })
 ]
 
 const Contact = () => {
     const [data, setData] = useState<Contact[]>([]);
-    const rerender = useReducer(() => ({}), {})[1]
+    const [loading, setLoading] = useState<boolean>(false)
 
     const table = useReactTable({
         data,
@@ -52,6 +54,7 @@ const Contact = () => {
 
     useEffect(() => {
         const fetchData = async () => {
+            setLoading(true)
             try {
                 const result = await get<Response>('/contact');
                 if (result) {
@@ -60,17 +63,17 @@ const Contact = () => {
             } catch (error) {
                 console.error(error);
             }
+            setLoading(false)
         };
-
         fetchData();
     }, []);
 
     return (
         <div className='p-2'>
-            <table className='flex flex-col w-full gap-4'>
+            <table className='flex flex-col w-full gap-4 table-auto'>
                 <thead>
                     {table.getHeaderGroups().map(headerGroup => (
-                        <tr key={headerGroup.id} className='w-full flex flex-row justify-between bg-gray-100 px-4 py-6 rounded-xl'>
+                        <tr key={headerGroup.id} className='w-full flex flex-row justify-between bg-gray-700 text-white px-10 py-6 rounded-xl'>
                             {headerGroup.headers.map(header => (
                                 <th key={header.id} className='w-64 text-start'>
                                     {header.isPlaceholder
@@ -84,17 +87,32 @@ const Contact = () => {
                         </tr>
                     ))}
                 </thead>
-                <tbody className='border border-gray-200 rounded-xl'>
-                    {table.getRowModel().rows.map(row => (
-                        <tr key={row.id} className='w-full flex flex-row justify-between px-4 py-10 border-b border-gray-200'>
+                {
+
+                    <tbody> {loading ?
+                        <>
+                            <tr className='w-full flex flex-row justify-between h-28 border rounded-xl shadow-md mb-4 animate-pulse bg-gray-400'></tr>
+                            <tr className='w-full flex flex-row justify-between h-28 border rounded-xl shadow-md mb-4 animate-pulse bg-gray-400'></tr>
+                            <tr className='w-full flex flex-row justify-between h-28 border rounded-xl shadow-md mb-4 animate-pulse bg-gray-400'></tr>
+                            <tr className='w-full flex flex-row justify-between h-28 border rounded-xl shadow-md mb-4 animate-pulse bg-gray-400'></tr>
+                            <tr className='w-full flex flex-row justify-between h-28 border rounded-xl shadow-md mb-4 animate-pulse bg-gray-400'></tr>
+                            <tr className='w-full flex flex-row justify-between h-28 border rounded-xl shadow-md mb-4 animate-pulse bg-gray-400'></tr>
+                            <tr className='w-full flex flex-row justify-between h-28 border rounded-xl shadow-md mb-4 animate-pulse bg-gray-400'></tr>
+                            <tr className='w-full flex flex-row justify-between h-28 border rounded-xl shadow-md mb-4 animate-pulse bg-gray-400'></tr>
+                            <tr className='w-full flex flex-row justify-between h-28 border rounded-xl shadow-md mb-4 animate-pulse bg-gray-400'></tr>
+                            <tr className='w-full flex flex-row justify-between h-28 border rounded-xl shadow-md mb-4 animate-pulse bg-gray-400'></tr>
+                        </> :
+                        table.getRowModel().rows.map(row => (
+                        <tr key={row.id} className='w-full flex flex-row justify-between px-10 py-6 border rounded-xl shadow-md mb-4'>
                             {row.getVisibleCells().map(cell => (
                                 <td key={cell.id} className='w-64'>
                                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                                 </td>
                             ))}
                         </tr>
-                    ))}
-                </tbody>
+                        ))}
+                    </tbody>
+                }
             </table>
         </div>
     )
