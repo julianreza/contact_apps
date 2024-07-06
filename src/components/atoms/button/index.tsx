@@ -21,4 +21,6 @@ const Button: React.FC<IButtonProps> = forwardRef(
     }
 )
 
+Button.displayName = 'Button';
+
 export default Button
